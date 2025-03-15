@@ -16,6 +16,8 @@ export class CoingeckoService {
     );
   }
 
+  
+
   getDetails(coinId: string): Observable<CoinDetails> {
     return this.http.get<CoinDetails>(
       `https://api.coingecko.com/api/v3/coins/${coinId}`
