@@ -8,15 +8,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CoingeckoService {
+  readonly BASE_URL = 'https://api.coingecko.com/api/v3';
   constructor(private http: HttpClient) {}
 
   getCoins() {
-    return this.http.get<Coin[]>('https://api.coingecko.com/api/v3/coins/list');
+    return this.http.get<Coin[]>(`${this.BASE_URL}/coins/list`);
   }
 
   getDetails(coinId: string): Observable<CoinDetails> {
-    return this.http.get<CoinDetails>(
-      `https://api.coingecko.com/api/v3/coins/${coinId}`
-    );
+    return this.http.get<CoinDetails>(`${this.BASE_URL}/coins/${coinId}`);
   }
 }
