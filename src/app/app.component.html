@@ -38,37 +38,39 @@
     ></mat-paginator>
   </span>
   <div class="details">
-    <div *ngIf="selectedCoin$ | async; else noneSelected">
-      <h2>
-        {{ (selectedCoin$ | async)?.name }} ({{
-          (selectedCoin$ | async)?.symbol
-        }})
-      </h2>
-      <img
-        [src]="(selectedCoin$ | async)?.image?.small"
-        alt="{{ (selectedCoin$ | async)?.name }}"
-      />
-      <p>
-        <strong>Categories:</strong>
-        {{ (selectedCoin$ | async)?.categories?.join(", ") }}
-      </p>
-      <p>
-        <strong>Homepage:</strong>
-        <a [href]="(selectedCoin$ | async)?.links?.homepage" target="_blank">{{
-          (selectedCoin$ | async)?.links?.homepage
-        }}</a>
-      </p>
-      <p>
-        <strong>Genesis Date:</strong>
-        {{ (selectedCoin$ | async)?.genesis_date }}
-      </p>
-      <p>
-        <strong>Current Price (EUR):</strong>
-        {{ (selectedCoin$ | async)?.market_data?.current_price?.eur }}
-      </p>
-    </div>
-    <ng-template #noneSelected>
-      <p class="none-selected">Click 'View' to see details on one coin</p>
-    </ng-template>
+    @if((selectedCoin$ | async) && !isLoadingDetails){
+    <h2>
+      {{ (selectedCoin$ | async)?.name }} ({{
+        (selectedCoin$ | async)?.symbol
+      }})
+    </h2>
+    <img
+      [src]="(selectedCoin$ | async)?.image?.small"
+      alt="{{ (selectedCoin$ | async)?.name }}"
+    />
+    <p>
+      <strong>Categories:</strong>
+      {{ (selectedCoin$ | async)?.categories?.join(", ") }}
+    </p>
+    <p>
+      <strong>Homepage:</strong>
+      <a [href]="(selectedCoin$ | async)?.links?.homepage" target="_blank">{{
+        (selectedCoin$ | async)?.links?.homepage
+      }}</a>
+    </p>
+    <p>
+      <strong>Genesis Date:</strong>
+      {{ (selectedCoin$ | async)?.genesis_date }}
+    </p>
+    <p>
+      <strong>Current Price (EUR):</strong>
+      {{ (selectedCoin$ | async)?.market_data?.current_price?.eur }}
+    </p>
+    }@else if (isLoadingDetails) {
+    <p class="none-selected">Loading ...</p>
+    } @else if(!(selectedCoin$ | async) && !isLoadingDetails){
+    <p class="none-selected">Click 'View' to see details on one coin</p>
+
+    }
   </div>
 </div>

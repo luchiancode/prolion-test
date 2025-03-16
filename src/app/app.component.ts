@@ -9,11 +9,14 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  from,
   map,
   Observable,
   Subject,
+  switchMap,
   take,
   tap,
+  throttleTime,
 } from 'rxjs';
 import { CoingeckoService } from './coingecko.service';
 import { CommonModule } from '@angular/common';
@@ -40,6 +43,7 @@ export class AppComponent implements OnInit {
   dataSource$!: Observable<MatTableDataSource<Coin>>;
   coinSelected$ = new Subject<string>();
   selectedCoin$!: Observable<CoinDetails>;
+  isLoadingDetails = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   private filterSubject = new BehaviorSubject<string>('');
@@ -68,6 +72,15 @@ export class AppComponent implements OnInit {
         });
       })
     );
+
+    this.selectedCoin$ = this.coinSelected$.pipe(
+      throttleTime(300),
+      distinctUntilChanged(),
+      switchMap((coinId) => {
+        this.isLoadingDetails = false;
+        return this.coinService.getDetails(coinId);
+      })
+    );
   }
 
   applyFilter(event: Event): void {
@@ -78,8 +91,7 @@ export class AppComponent implements OnInit {
   }
 
   getDetails(coinId: string): void {
-    this.selectedCoin$ = this.coinService
-      .getDetails(coinId)
-      .pipe(take(1),distinctUntilChanged(), debounceTime(10));
+    this.isLoadingDetails = true;
+    this.coinSelected$.next(coinId);
   }
 }
