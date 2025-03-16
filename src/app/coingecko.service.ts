@@ -11,14 +11,8 @@ export class CoingeckoService {
   constructor(private http: HttpClient) {}
 
   getCoins() {
-    return this.http.get<Coin[]>(
-      'https://api.coingecko.com/api/v3/coins/list'
-    );
+    return this.http.get<Coin[]>('https://api.coingecko.com/api/v3/coins/list');
   }
-
-
-  
-
 
   getDetails(coinId: string): Observable<CoinDetails> {
     return this.http.get<CoinDetails>(
