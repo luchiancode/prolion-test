@@ -9,6 +9,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  filter,
   from,
   map,
   Observable,
@@ -42,7 +43,7 @@ export class AppComponent implements OnInit {
   displayedColumns: string[] = ['symbol', 'name', 'details'];
   dataSource$!: Observable<MatTableDataSource<Coin>>;
   coinSelected$ = new Subject<string>();
-  selectedCoin$!: Observable<CoinDetails>;
+  selectedCoin!: CoinDetails;
   isLoadingDetails = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -73,14 +74,17 @@ export class AppComponent implements OnInit {
       })
     );
 
-    this.selectedCoin$ = this.coinSelected$.pipe(
-      throttleTime(300),
-      distinctUntilChanged(),
-      switchMap((coinId) => {
+    this.coinSelected$
+      .pipe(
+        filter(Boolean),
+        throttleTime(300),
+        distinctUntilChanged(),
+        switchMap((coinId) => this.coinService.getDetails(coinId))
+      )
+      .subscribe((coin) => {
         this.isLoadingDetails = false;
-        return this.coinService.getDetails(coinId);
-      })
-    );
+        this.selectedCoin = coin;
+      });
   }
 
   applyFilter(event: Event): void {

@@ -38,37 +38,30 @@
     ></mat-paginator>
   </span>
   <div class="details">
-    @if((selectedCoin$ | async) && !isLoadingDetails){
-    <h2>
-      {{ (selectedCoin$ | async)?.name }} ({{
-        (selectedCoin$ | async)?.symbol
-      }})
-    </h2>
-    <img
-      [src]="(selectedCoin$ | async)?.image?.small"
-      alt="{{ (selectedCoin$ | async)?.name }}"
-    />
+    @if(!!selectedCoin && !isLoadingDetails){
+    <h2>{{ selectedCoin?.name }} ({{ selectedCoin?.symbol }})</h2>
+    <img [src]="selectedCoin?.image?.small" alt="{{ selectedCoin?.name }}" />
     <p>
       <strong>Categories:</strong>
-      {{ (selectedCoin$ | async)?.categories?.join(", ") }}
+      {{ selectedCoin?.categories?.join(", ") }}
     </p>
     <p>
       <strong>Homepage:</strong>
-      <a [href]="(selectedCoin$ | async)?.links?.homepage" target="_blank">{{
-        (selectedCoin$ | async)?.links?.homepage
+      <a [href]="selectedCoin?.links?.homepage" target="_blank">{{
+        selectedCoin?.links?.homepage
       }}</a>
     </p>
     <p>
       <strong>Genesis Date:</strong>
-      {{ (selectedCoin$ | async)?.genesis_date }}
+      {{ selectedCoin?.genesis_date }}
     </p>
     <p>
       <strong>Current Price (EUR):</strong>
-      {{ (selectedCoin$ | async)?.market_data?.current_price?.eur }}
+      {{ selectedCoin?.market_data?.current_price?.eur }}
     </p>
-    }@else if (isLoadingDetails) {
+    } @else if (isLoadingDetails && !!!selectedCoin) {
     <p class="none-selected">Loading ...</p>
-    } @else if(!(selectedCoin$ | async) && !isLoadingDetails){
+    } @else if(!!!selectedCoin && !isLoadingDetails){
     <p class="none-selected">Click 'View' to see details on one coin</p>
 
     }
