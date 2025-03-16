@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, model, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,15 +7,12 @@ import { CoinDetails } from './models/coin-details.model';
 import {
   BehaviorSubject,
   combineLatest,
-  debounceTime,
   distinctUntilChanged,
   filter,
-  from,
   map,
   Observable,
   Subject,
   switchMap,
-  take,
   tap,
   throttleTime,
 } from 'rxjs';
@@ -43,7 +40,7 @@ export class AppComponent implements OnInit {
   displayedColumns: string[] = ['symbol', 'name', 'details'];
   dataSource$!: Observable<MatTableDataSource<Coin>>;
   coinSelected$ = new Subject<string>();
-  selectedCoin!: CoinDetails;
+  selectedCoin = model<CoinDetails>();
   isLoadingDetails = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -83,7 +80,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe((coin) => {
         this.isLoadingDetails = false;
-        this.selectedCoin = coin;
+        this.selectedCoin.set(coin);
       });
   }
 
@@ -96,6 +93,7 @@ export class AppComponent implements OnInit {
 
   getDetails(coinId: string): void {
     this.isLoadingDetails = true;
+    this.selectedCoin.set(undefined);
     this.coinSelected$.next(coinId);
   }
 }

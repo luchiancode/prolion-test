@@ -38,32 +38,32 @@
     ></mat-paginator>
   </span>
   <div class="details">
-    @if(!!selectedCoin && !isLoadingDetails){
-    <h2>{{ selectedCoin?.name }} ({{ selectedCoin?.symbol }})</h2>
-    <img [src]="selectedCoin?.image?.small" alt="{{ selectedCoin?.name }}" />
+    @if(!!selectedCoin()){
+
+    <h2>{{ selectedCoin()?.name }} ({{ selectedCoin()?.symbol }})</h2>
+    <img [src]="selectedCoin()?.image?.small" alt="{{ selectedCoin()?.name }}" />
     <p>
       <strong>Categories:</strong>
-      {{ selectedCoin?.categories?.join(", ") }}
+      {{ selectedCoin()?.categories?.join(", ") }}
     </p>
     <p>
       <strong>Homepage:</strong>
-      <a [href]="selectedCoin?.links?.homepage" target="_blank">{{
-        selectedCoin?.links?.homepage
+      <a [href]="selectedCoin()?.links?.homepage" target="_blank">{{
+        selectedCoin()?.links?.homepage
       }}</a>
     </p>
     <p>
       <strong>Genesis Date:</strong>
-      {{ selectedCoin?.genesis_date }}
+      {{ selectedCoin()?.genesis_date }}
     </p>
     <p>
       <strong>Current Price (EUR):</strong>
-      {{ selectedCoin?.market_data?.current_price?.eur }}
+      {{ selectedCoin()?.market_data?.current_price?.eur }}
     </p>
-    } @else if (isLoadingDetails && !!!selectedCoin) {
-    <p class="none-selected">Loading ...</p>
-    } @else if(!!!selectedCoin && !isLoadingDetails){
-    <p class="none-selected">Click 'View' to see details on one coin</p>
-
+    } @else if (isLoadingDetails) {
+    <p class="center-text">Loading ...</p>
+    } @else {
+    <p class="center-text">Click 'View' to see details on one coin</p>
     }
   </div>
 </div>
